@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ja"
       className={`${shippori.variable} ${playfair.variable} ${noto.variable}`}
     >
       <body className="font-sans antialiased">{children}</body>
