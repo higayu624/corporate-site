@@ -103,7 +103,7 @@ Next.js で新規構築する。ホスティングは Vercel。
 | 罫線 | `#E5DCCC` |
 | フッター背景 | `#3A3327` |
 
-### タイポgrafィ
+### タイポグラフィ
 - 見出し: Shippori Mincho（和）/ Playfair Display（英）。細め(500-600)・字間広め
 - 本文: Noto Sans JP / Inter
 - 大見出し例: 54px・line-height 1.35・letter-spacing 2px
