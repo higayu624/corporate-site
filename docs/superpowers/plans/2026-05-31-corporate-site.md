@@ -196,13 +196,15 @@ git commit -m "chore: Vitest + React Testing Libraryを構築"
 ## Task 4: デザイントークンとフォントの設定
 
 **Files:**
-- Modify: `app/globals.css`, `app/layout.tsx`, `tailwind.config.ts`
+- Modify: `app/globals.css`, `app/layout.tsx`
 
-- [ ] **Step 1: `app/globals.css` に配色のCSS変数を追加**
+注: Tailwind CSS **v4** を使用。設定は `tailwind.config.ts` ではなく `app/globals.css` の `@theme` ブロックに集約する（v4はCSSファースト設定）。`@theme` で定義した `--color-*` は `bg-*`/`text-*`/`border-*` ユーティリティを、`--font-*` は `font-*` ユーティリティを自動生成する。
 
-`@tailwind` ディレクティブの下に追記:
+- [ ] **Step 1: `app/globals.css` に `@theme` で配色・フォントトークンを定義**
+
+`globals.css` 冒頭の `@import "tailwindcss";` の下に追記:
 ```css
-:root {
+@theme {
   --color-ivory: #F6F1E9;
   --color-paper: #FBF8F2;
   --color-sand: #EFE7D8;
@@ -211,28 +213,20 @@ git commit -m "chore: Vitest + React Testing Libraryを構築"
   --color-bronze: #9C8866;
   --color-bronze-dark: #6B5D44;
   --color-line: #E5DCCC;
+
+  --font-serif: var(--font-shippori), serif;
+  --font-display: var(--font-playfair), serif;
+  --font-sans: var(--font-noto), sans-serif;
 }
+
 html { scroll-behavior: smooth; scroll-padding-top: 80px; }
-body { background: var(--color-ivory); color: var(--color-ink); }
+body { background-color: var(--color-ivory); color: var(--color-ink); }
 ```
+これで `bg-ivory` `text-ink` `text-sub` `bg-bronze` `bg-bronze-dark` `text-bronze-dark` `border-bronze` `border-line` `font-serif` `font-display` `font-sans` などが後続タスクで使える。
 
-- [ ] **Step 2: `tailwind.config.ts` の theme.extend に色とフォントを追加**
+- [ ] **Step 2: （v4のため tailwind.config.ts は不要）**
 
-```typescript
-extend: {
-  colors: {
-    ivory: "#F6F1E9", paper: "#FBF8F2", sand: "#EFE7D8",
-    ink: "#3A3327", sub: "#7A6F5C",
-    bronze: { DEFAULT: "#9C8866", dark: "#6B5D44" },
-    line: "#E5DCCC",
-  },
-  fontFamily: {
-    serif: ["var(--font-shippori)", "serif"],
-    display: ["var(--font-playfair)", "serif"],
-    sans: ["var(--font-noto)", "sans-serif"],
-  },
-},
-```
+v4ではJS設定ファイルは生成されず不要。このステップはスキップ。もし旧来の `tailwind.config.ts` が存在する場合のみ、混乱を避けるため削除を検討する（存在しなければ何もしない）。
 
 - [ ] **Step 3: `app/layout.tsx` で next/font を設定**
 
