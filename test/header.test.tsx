@@ -9,4 +9,8 @@ describe("Header", () => {
     expect(screen.getByRole("link", { name: "SERVICE" })).toHaveAttribute("href", "#service");
     expect(screen.getByRole("link", { name: "CONTACT" })).toHaveAttribute("href", "#contact");
   });
+  it("モバイルメニューボタンがある", () => {
+    render(<Header />);
+    expect(screen.getByRole("button", { name: /メニュー/ })).toBeInTheDocument();
+  });
 });
