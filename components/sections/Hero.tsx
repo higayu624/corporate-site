@@ -1,8 +1,20 @@
+import Image from "next/image";
 import { site } from "@/lib/site";
 
 export default function Hero() {
   return (
-    <section id="top" className="mx-auto max-w-[1100px] px-7 pt-28 pb-28">
+    <section id="top" className="relative overflow-hidden">
+      <Image
+        src="/images/hero-bg.jpg"
+        alt=""
+        aria-hidden
+        fill
+        priority
+        sizes="100vw"
+        className="-z-20 object-cover object-right"
+      />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ivory via-ivory/55 to-transparent" />
+      <div className="mx-auto max-w-[1100px] px-7 pt-28 pb-28">
       <p className="text-[11px] uppercase tracking-[4px] text-bronze">
         Shift Gear — Software Engineering
       </p>
@@ -19,6 +31,7 @@ export default function Hero() {
         <a href="#works" className="border-b border-bronze pb-1 text-sm text-ink">
           実績を見る →
         </a>
+      </div>
       </div>
     </section>
   );

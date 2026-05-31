@@ -9,6 +9,7 @@ export const site = {
   bio:
     "メガベンチャーで複数のBtoB新規事業のシステム開発に従事。顧客との会話からビジネス価値を最大化する開発を探求。ニーズを理解するための検証を得意とする。",
   skills: ["Scrum", "イベントソーシング", "Golang", "Spring Boot", "時系列データのAI学習モデル"],
+  photo: "/images/profile.jpg",
 };
 
 export const services = [
@@ -23,6 +24,7 @@ export type Work = {
   tags: string[];
   url?: string;
   category: string;
+  image?: string;
 };
 
 export const works: Work[] = [
@@ -32,6 +34,7 @@ export const works: Work[] = [
     tags: ["EC構築", "在庫管理", "運用"],
     url: "https://marugo-wellness.jp/pages/sportsjog",
     category: "EC / 在庫管理",
+    image: "/images/work-sportsjog.jpg",
   },
   {
     title: "抹茶のアメリカ需要調査LP",
@@ -39,12 +42,14 @@ export const works: Work[] = [
     tags: ["Next.js", "需要検証", "計測"],
     url: "https://tastepick-front.vercel.app/",
     category: "需要検証 / LP",
+    image: "/images/work-tastepick.jpg",
   },
   {
     title: "人材系 BackOffice AI活用コンサル",
     desc: "バックオフィス業務へのAI活用を支援。業務削減の設計から伴走。",
     tags: ["AI活用", "業務改善", "コンサル"],
     category: "AI / コンサル",
+    image: "/images/work-backoffice.jpg",
   },
 ];
 

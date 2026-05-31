@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { site } from "@/lib/site";
 
 export default function Profile() {
@@ -7,10 +8,21 @@ export default function Profile() {
         <p className="text-[11px] uppercase tracking-[4px] text-bronze">Profile</p>
         <h2 className="mt-3.5 mb-14 font-serif text-3xl font-semibold tracking-[2px]">プロフィール</h2>
         <div className="grid gap-12 md:grid-cols-[280px_1fr]">
-          <div className="rounded-lg border border-line bg-white p-8">
-            <Item k="屋号" v={site.name} />
-            <Item k="代表" v={site.owner} />
-            <Item k="拠点" v={site.location} />
+          <div className="space-y-5">
+            <div className="relative h-44 w-36 overflow-hidden rounded-2xl border border-line bg-sand shadow-[0_12px_26px_rgba(107,93,68,0.14)]">
+              <Image
+                src={site.photo}
+                alt={`${site.owner}（${site.name} 代表）`}
+                fill
+                sizes="144px"
+                className="object-cover"
+              />
+            </div>
+            <div className="rounded-lg border border-line bg-white p-8">
+              <Item k="屋号" v={site.name} />
+              <Item k="代表" v={site.owner} />
+              <Item k="拠点" v={site.location} />
+            </div>
           </div>
           <div>
             <p className="mb-6 text-[15px] text-sub">{site.bio}</p>

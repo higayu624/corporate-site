@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { works } from "@/lib/site";
 
 export default function Works() {
@@ -10,8 +11,24 @@ export default function Works() {
           {works.map((w) => {
             const inner = (
               <>
-                <div className="flex h-28 items-end bg-gradient-to-br from-sand to-[#e2d4bd] p-4">
-                  <span className="text-[11px] uppercase tracking-[3px] text-bronze-dark">
+                <div className="relative flex h-40 items-end overflow-hidden bg-gradient-to-br from-sand to-[#e2d4bd] p-4">
+                  {w.image && (
+                    <>
+                      <Image
+                        src={w.image}
+                        alt={`${w.title} のサムネイル`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 360px"
+                        className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                    </>
+                  )}
+                  <span
+                    className={`relative text-[11px] uppercase tracking-[3px] ${
+                      w.image ? "text-white" : "text-bronze-dark"
+                    }`}
+                  >
                     {w.category}
                   </span>
                 </div>
@@ -37,7 +54,7 @@ export default function Works() {
               </>
             );
             const cls =
-              "block overflow-hidden rounded-lg border border-line bg-white transition-transform hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(107,93,68,0.10)]";
+              "group block overflow-hidden rounded-lg border border-line bg-white transition-transform hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(107,93,68,0.10)]";
             return w.url ? (
               <a key={w.title} href={w.url} target="_blank" rel="noopener noreferrer" className={cls}>
                 {inner}
