@@ -5,7 +5,7 @@ export const site = {
   email: "higayu624@gmail.com",
   tagline: "ビジネス価値を、最大化する。",
   heroSub:
-    "顧客との対話から、本当に使われるソフトウェアを。ニーズの検証を起点に、ビジネスの成果まで伴走します。",
+    "作って、使って、見直す。変化を都度織り込むから、世の中を先取りできる。",
   bio:
     "メガベンチャーで複数のBtoB新規事業のシステム開発に従事。顧客との会話からビジネス価値を最大化する開発を探求。ニーズを理解するための検証を得意とする。",
   skills: ["Scrum", "イベントソーシング", "Golang", "Spring Boot", "時系列データのAI学習モデル"],
@@ -45,10 +45,10 @@ export const works: Work[] = [
     image: "/images/work-tastepick.jpg",
   },
   {
-    title: "人材系 BackOffice AI活用コンサル",
+    title: "人材系 BackOffice AI活用支援",
     desc: "バックオフィス業務へのAI活用を支援。業務削減の設計から伴走。",
-    tags: ["AI活用", "業務改善", "コンサル"],
-    category: "AI / コンサル",
+    tags: ["AI活用", "業務改善"],
+    category: "AI / 業務改善",
     image: "/images/work-backoffice.jpg",
   },
 ];

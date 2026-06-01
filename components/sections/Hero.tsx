@@ -18,8 +18,8 @@ export default function Hero() {
       <p className="text-[11px] uppercase tracking-[4px] text-bronze">
         Shift Gear — Software Engineering
       </p>
-      <h1 className="mt-5 font-serif text-4xl font-semibold leading-[1.35] tracking-[2px] md:text-[54px]">
-        ビジネス価値を、<br />最大化する。
+      <h1 className="mt-5 font-serif text-[30px] font-semibold leading-[1.45] tracking-[1.5px] md:text-[50px] md:leading-[1.35] md:tracking-[2px]">
+        3ヶ月先の正解より、<br />2週間ごとの最適を。
       </h1>
       <div className="my-6 h-px w-10 bg-bronze" />
       <p className="max-w-[620px] text-sub">{site.heroSub}</p>
