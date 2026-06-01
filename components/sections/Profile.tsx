@@ -8,12 +8,12 @@ export default function Profile() {
         <p className="text-[11px] uppercase tracking-[4px] text-bronze">Profile</p>
         <h2 className="mt-3.5 mb-14 font-serif text-3xl font-semibold tracking-[2px]">プロフィール</h2>
         <div className="flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
-          <div className="relative aspect-[4/5] w-full max-w-[240px] shrink-0 overflow-hidden rounded-2xl shadow-[0_18px_40px_rgba(107,93,68,0.18)]">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[120px] shrink-0 overflow-hidden rounded-2xl shadow-[0_18px_40px_rgba(107,93,68,0.18)] md:mx-0">
             <Image
               src={site.photo}
               alt={`${site.owner}（${site.name} 代表）`}
               fill
-              sizes="240px"
+              sizes="120px"
               className="object-cover"
             />
           </div>
