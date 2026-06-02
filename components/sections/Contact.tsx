@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/ui/Reveal";
 import { site } from "@/lib/site";
 
 export default function Contact() {
@@ -5,7 +6,7 @@ export default function Contact() {
   return (
     <section id="contact" className="bg-bg py-24 md:py-28">
       <div className="mx-auto max-w-[1100px] px-7">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand via-brand2 to-brand3 px-7 py-16 text-center md:py-20">
+        <Reveal className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand via-brand2 to-brand3 px-7 py-16 text-center md:py-20">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_20%_20%,white,transparent_40%),radial-gradient(circle_at_80%_80%,white,transparent_35%)]"
@@ -27,7 +28,7 @@ export default function Contact() {
               メールで問い合わせる
             </a>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

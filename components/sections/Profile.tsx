@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Reveal } from "@/components/ui/Reveal";
 import { site } from "@/lib/site";
 
 export default function Profile() {
@@ -15,7 +16,7 @@ export default function Profile() {
         <h2 className="mt-3 mb-14 font-display text-3xl font-extrabold tracking-tight text-ink md:text-4xl">
           プロフィール
         </h2>
-        <div className="flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
+        <Reveal className="flex flex-col gap-10 md:flex-row md:items-center md:gap-16">
           <div className="relative mx-auto aspect-[4/5] w-full max-w-[130px] shrink-0 rounded-2xl bg-gradient-to-br from-brand via-brand2 to-brand3 p-[3px] shadow-[0_18px_45px_-15px_rgba(99,102,241,0.7)] md:mx-0">
             <div className="relative h-full w-full overflow-hidden rounded-[14px] bg-white">
               <Image
@@ -50,7 +51,7 @@ export default function Profile() {
               ))}
             </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

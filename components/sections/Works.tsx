@@ -1,52 +1,79 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useReveal } from "@/components/ui/Reveal";
 import { works } from "@/lib/site";
 
-export default function Works() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState<boolean[]>(() => works.map(() => false));
+type WorkItem = (typeof works)[number];
 
-  useEffect(() => {
-    if (typeof IntersectionObserver === "undefined") {
-      setVisible(works.map(() => true));
-      return;
-    }
-    const el = containerRef.current;
-    if (!el) return;
-    const timeouts: ReturnType<typeof setTimeout>[] = [];
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          works.forEach((_, i) => {
-            timeouts.push(
-              setTimeout(() => {
-                setVisible((prev) => {
-                  if (prev[i]) return prev;
-                  const next = [...prev];
-                  next[i] = true;
-                  return next;
-                });
-              }, i * 140)
-            );
-          });
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => {
-      obs.disconnect();
-      timeouts.forEach(clearTimeout);
-    };
-  }, []);
-
-  const reveal = (i: number) =>
-    visible[i]
+function WorkCard({ w }: { w: WorkItem }) {
+  const { ref, visible } = useReveal<HTMLDivElement>();
+  const cls = `group block overflow-hidden rounded-2xl border border-line bg-white transition-all duration-500 ease-out hover:-translate-y-1.5 hover:border-brand/30 hover:shadow-[0_24px_50px_-20px_rgba(99,102,241,0.45)] ${
+    visible
       ? "translate-y-0 scale-100 opacity-100"
-      : "translate-y-8 scale-95 opacity-0";
+      : "translate-y-8 scale-95 opacity-0"
+  }`;
+  const inner = (
+    <>
+      <div className="relative flex h-40 items-end overflow-hidden bg-gradient-to-br from-brand to-brand2 p-4">
+        {w.image && (
+          <>
+            <Image
+              src={w.image}
+              alt={`${w.title} のサムネイル`}
+              fill
+              sizes="(max-width: 768px) 100vw, 360px"
+              className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+          </>
+        )}
+        <span className="relative rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[2px] text-white backdrop-blur">
+          {w.category}
+        </span>
+      </div>
+      <div className="p-6">
+        <h3 className="mb-2.5 text-[17px] font-bold tracking-tight text-ink">
+          {w.title}
+        </h3>
+        <p className="mb-4 text-[13px] leading-[1.85] text-sub">{w.desc}</p>
+        <div className="mb-4 flex flex-wrap gap-2">
+          {w.tags.map((t) => (
+            <span
+              key={t}
+              className="rounded-full border border-brand/15 bg-brand/5 px-2.5 py-1 text-[11px] font-medium text-brand-ink"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+        {w.url ? (
+          <span className="text-[13px] font-semibold text-brand-ink transition-colors group-hover:text-brand">
+            サイトを見る ↗
+          </span>
+        ) : (
+          <span className="text-[13px] text-muted">非公開案件</span>
+        )}
+      </div>
+    </>
+  );
+  return w.url ? (
+    <a
+      ref={ref as unknown as React.Ref<HTMLAnchorElement>}
+      href={w.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cls}
+    >
+      {inner}
+    </a>
+  ) : (
+    <div ref={ref} className={cls}>
+      {inner}
+    </div>
+  );
+}
 
+export default function Works() {
   return (
     <section
       id="works"
@@ -63,63 +90,10 @@ export default function Works() {
         <h2 className="mt-3 mb-14 font-display text-3xl font-extrabold tracking-tight text-white md:text-4xl">
           実績
         </h2>
-        <div ref={containerRef} className="grid gap-6 md:grid-cols-3">
-          {works.map((w, i) => {
-            const inner = (
-              <>
-                <div className="relative flex h-40 items-end overflow-hidden bg-gradient-to-br from-brand to-brand2 p-4">
-                  {w.image && (
-                    <>
-                      <Image
-                        src={w.image}
-                        alt={`${w.title} のサムネイル`}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 360px"
-                        className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                    </>
-                  )}
-                  <span className="relative rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[2px] text-white backdrop-blur">
-                    {w.category}
-                  </span>
-                </div>
-                <div className="p-6">
-                  <h3 className="mb-2.5 text-[17px] font-bold tracking-tight text-ink">
-                    {w.title}
-                  </h3>
-                  <p className="mb-4 text-[13px] leading-[1.85] text-sub">{w.desc}</p>
-                  <div className="mb-4 flex flex-wrap gap-2">
-                    {w.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full border border-brand/15 bg-brand/5 px-2.5 py-1 text-[11px] font-medium text-brand-ink"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  {w.url ? (
-                    <span className="text-[13px] font-semibold text-brand-ink transition-colors group-hover:text-brand">
-                      サイトを見る ↗
-                    </span>
-                  ) : (
-                    <span className="text-[13px] text-muted">非公開案件</span>
-                  )}
-                </div>
-              </>
-            );
-            const cls = `group block overflow-hidden rounded-2xl border border-line bg-white transition-all duration-500 ease-out hover:-translate-y-1.5 hover:border-brand/30 hover:shadow-[0_24px_50px_-20px_rgba(99,102,241,0.45)] ${reveal(
-              i
-            )}`;
-            return w.url ? (
-              <a key={w.title} href={w.url} target="_blank" rel="noopener noreferrer" className={cls}>
-                {inner}
-              </a>
-            ) : (
-              <div key={w.title} className={cls}>{inner}</div>
-            );
-          })}
+        <div className="grid gap-6 md:grid-cols-3">
+          {works.map((w) => (
+            <WorkCard key={w.title} w={w} />
+          ))}
         </div>
       </div>
     </section>
