@@ -48,12 +48,19 @@ export default function Works() {
       : "translate-y-8 scale-95 opacity-0";
 
   return (
-    <section id="works" className="bg-bg py-24 md:py-28">
-      <div className="mx-auto max-w-[1100px] px-7">
-        <p className="bg-gradient-to-r from-brand to-brand3 bg-clip-text text-[12px] font-bold uppercase tracking-[4px] text-transparent">
+    <section
+      id="works"
+      className="relative overflow-hidden bg-gradient-to-br from-brand3 via-brand2 to-brand py-24 md:py-28"
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_15%_15%,white,transparent_42%),radial-gradient(circle_at_85%_85%,white,transparent_38%)]"
+      />
+      <div className="relative mx-auto max-w-[1100px] px-7">
+        <p className="text-[12px] font-bold uppercase tracking-[4px] text-white/80">
           Works
         </p>
-        <h2 className="mt-3 mb-14 font-display text-3xl font-extrabold tracking-tight text-ink md:text-4xl">
+        <h2 className="mt-3 mb-14 font-display text-3xl font-extrabold tracking-tight text-white md:text-4xl">
           実績
         </h2>
         <div ref={containerRef} className="grid gap-6 md:grid-cols-3">
