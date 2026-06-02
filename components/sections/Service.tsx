@@ -69,7 +69,9 @@ export default function Service() {
             >
               <div
                 aria-hidden
-                className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-brand via-brand2 to-brand3 transition-transform duration-300 group-hover:scale-x-100"
+                className={`absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-brand via-brand2 to-brand3 transition-transform duration-500 ease-out group-hover:scale-x-100 ${
+                  visible[i] ? "max-md:scale-x-100" : ""
+                }`}
               />
               <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand2 font-display text-lg font-bold text-white shadow-[0_10px_24px_-8px_rgba(99,102,241,0.8)]">
                 {s.no}
