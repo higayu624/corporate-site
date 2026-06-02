@@ -5,7 +5,9 @@ import Hero from "@/components/sections/Hero";
 describe("Hero", () => {
   it("キャッチコピーとCTAを表示する", () => {
     render(<Hero />);
-    expect(screen.getByText(/2週間ごとの最適を/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "価値を出し続けるプロダクトを"
+    );
     expect(screen.getByRole("link", { name: "お問い合わせ" })).toHaveAttribute("href", "#contact");
   });
 });

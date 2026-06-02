@@ -130,19 +130,30 @@
 }
 
 @theme {
-  --color-ivory: #F6F1E9;
-  --color-paper: #FBF8F2;
-  --color-sand: #EFE7D8;
-  --color-ink: #3A3327;
-  --color-sub: #7A6F5C;
-  --color-bronze: #9C8866;
-  --color-bronze-dark: #6B5D44;
-  --color-line: #E5DCCC;
+  /* --- modern bright tech palette --- */
+  --color-bg: #FFFFFF;
+  --color-surface: #F5F7FD;
+  --color-ink: #0A0E1A;
+  --color-sub: #4B5565;
+  --color-muted: #94A3B8;
+  --color-line: #E9ECF5;
 
-  --font-serif: var(--font-shippori), serif;
-  --font-display: var(--font-playfair), serif;
+  --color-brand: #6366F1;   /* indigo */
+  --color-brand2: #8B5CF6;  /* violet */
+  --color-brand3: #22D3EE;  /* cyan   */
+  --color-brand-ink: #4F46E5;
+
+  /* legacy aliases → remapped onto the new palette so existing utilities stay on-brand */
+  --color-ivory: #FFFFFF;
+  --color-paper: #F5F7FD;
+  --color-sand: #EEF1FB;
+  --color-bronze: #6366F1;
+  --color-bronze-dark: #4F46E5;
+
+  --font-display: var(--font-jakarta), var(--font-noto), sans-serif;
+  --font-serif: var(--font-jakarta), var(--font-noto), sans-serif;
   --font-sans: var(--font-noto), sans-serif;
 }
 
 html { scroll-behavior: smooth; scroll-padding-top: 80px; }
-body { background-color: var(--color-ivory); color: var(--color-ink); }
+body { background-color: var(--color-bg); color: var(--color-ink); }
