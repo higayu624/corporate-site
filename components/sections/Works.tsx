@@ -77,11 +77,11 @@ export default function Works() {
   return (
     <section
       id="works"
-      className="relative overflow-hidden bg-gradient-to-br from-brand3 via-brand2 to-brand py-24 md:py-28"
+      className="relative overflow-hidden bg-gradient-to-br from-[#7C3AED] via-[#6D28D9] to-[#4C1D95] py-24 md:py-28"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(circle_at_15%_15%,white,transparent_42%),radial-gradient(circle_at_85%_85%,white,transparent_38%)]"
+        className="pointer-events-none absolute inset-0 opacity-20 [background-image:radial-gradient(circle_at_15%_15%,white,transparent_42%),radial-gradient(circle_at_85%_85%,white,transparent_38%)]"
       />
       <div className="relative mx-auto max-w-[1100px] px-7">
         <p className="text-[12px] font-bold uppercase tracking-[4px] text-white/80">
