@@ -77,7 +77,7 @@ export default function Works() {
   return (
     <section
       id="works"
-      className="relative overflow-hidden bg-gradient-to-b from-brand to-brand3 py-24 md:py-28"
+      className="relative overflow-hidden bg-gradient-to-b from-brand via-brand2 via-72% to-brand3 py-24 md:py-28"
     >
       <div
         aria-hidden
