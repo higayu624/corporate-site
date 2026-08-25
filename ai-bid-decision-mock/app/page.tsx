@@ -27,9 +27,9 @@ const tenders = [
     type: "道路舗装",
     due: "2026/09/04",
     status: "分析完了",
-    price: "9,840万円",
-    probability: 58,
-    margin: 11.5,
+    price: "9,430万円",
+    probability: 92,
+    margin: 2.4,
   },
   {
     name: "中央雨水幹線 管渠更新",
@@ -64,43 +64,43 @@ const tenders = [
 ];
 
 const priceCurve = [
-  { price: 9460, label: "9,460", probability: 84, margin: 5.8, profit: 549 },
-  { price: 9580, label: "9,580", probability: 78, margin: 7.0, profit: 671 },
-  { price: 9680, label: "9,680", probability: 72, margin: 8.2, profit: 793 },
-  { price: 9760, label: "9,760", probability: 65, margin: 9.8, profit: 956 },
-  { price: 9840, label: "9,840", probability: 58, margin: 11.5, profit: 1132 },
-  { price: 9940, label: "9,940", probability: 45, margin: 13.1, profit: 1302 },
-  { price: 10050, label: "10,050", probability: 31, margin: 15.3, profit: 1538 },
-  { price: 10180, label: "10,180", probability: 22, margin: 16.7, profit: 1700 },
+  { price: 9240, label: "9,240", probability: 98, margin: 0.3, profit: 32 },
+  { price: 9320, label: "9,320", probability: 96, margin: 1.2, profit: 112 },
+  { price: 9380, label: "9,380", probability: 94, margin: 1.8, profit: 172 },
+  { price: 9430, label: "9,430", probability: 92, margin: 2.4, profit: 226 },
+  { price: 9490, label: "9,490", probability: 88, margin: 3.0, profit: 282 },
+  { price: 9560, label: "9,560", probability: 81, margin: 3.7, profit: 352 },
+  { price: 9640, label: "9,640", probability: 69, margin: 4.5, profit: 432 },
+  { price: 9720, label: "9,720", probability: 54, margin: 5.3, profit: 512 },
 ];
 
 const scenarios = [
   {
     id: "win" as const,
     title: "A. 落札重視案",
-    price: "9,680万円",
-    probability: 72,
-    margin: 8.2,
-    profit: "793万円",
+    price: "9,380万円",
+    probability: 94,
+    margin: 1.8,
+    profit: "172万円",
     description: "受注を優先する場合の提案",
   },
   {
     id: "balance" as const,
     title: "B. バランス推奨案",
-    price: "9,840万円",
-    probability: 58,
-    margin: 11.5,
-    profit: "1,132万円",
-    description: "落札可能性と利益のバランスが最も良いAI推奨案",
+    price: "9,430万円",
+    probability: 92,
+    margin: 2.4,
+    profit: "226万円",
+    description: "90%台の受注可能性を維持しながら、1案件あたり約200万円の利益を確保するAI推奨案",
     badge: "AI推奨",
   },
   {
     id: "profit" as const,
     title: "C. 利益重視案",
-    price: "1億50万円",
-    probability: 31,
-    margin: 15.3,
-    profit: "1,538万円",
+    price: "9,640万円",
+    probability: 69,
+    margin: 4.5,
+    profit: "432万円",
     description: "利益を優先する場合の提案",
   },
 ];
@@ -262,8 +262,8 @@ function NewAnalysis({ onStart }: { onStart: () => void }) {
           <Field label="発注者" defaultValue="さいたま市 建設局" />
           <Field label="地域" defaultValue="埼玉県さいたま市" />
           <Field label="工種" defaultValue="道路舗装" />
-          <Field label="予定価格／設計金額" defaultValue="1億400万円" />
-          <Field label="想定原価" defaultValue="8,708万円" />
+          <Field label="予定価格／設計金額" defaultValue="9,780万円" />
+          <Field label="想定原価" defaultValue="9,208万円" />
           <Field label="工期" defaultValue="2026年10月から2027年3月" wide />
           <label className="md:col-span-2">
             <span className="mb-2 block text-sm font-semibold text-slate-700">入札公告・設計書など</span>
@@ -319,11 +319,11 @@ function Decision({
       <div className="grid gap-4 lg:grid-cols-4">
         <Summary label="案件名" value="東部幹線道路 改良工事" />
         <Summary label="発注者" value="さいたま市 建設局" />
-        <Summary label="予定価格" value="1億400万円" />
-        <Summary label="想定原価" value="8,708万円" />
+        <Summary label="予定価格" value="9,780万円" />
+        <Summary label="想定原価" value="9,208万円" />
       </div>
 
-      <Panel title="入札額と落札確率の関係" action={<span className="rounded-lg bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">推奨価格帯 9,760から9,900万円</span>}>
+      <Panel title="入札額と落札確率の関係" action={<span className="rounded-lg bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">推奨価格帯 9,380から9,490万円</span>}>
         <div className="grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
           <BidChart />
           <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
@@ -621,8 +621,8 @@ function BidChart() {
   const bottom = 54;
   const plotWidth = width - left - right;
   const plotHeight = height - top - bottom;
-  const minPrice = 9460;
-  const maxPrice = 10180;
+  const minPrice = 9240;
+  const maxPrice = 9720;
   const xFor = (price: number) => left + ((price - minPrice) / (maxPrice - minPrice)) * plotWidth;
   const yForProbability = (value: number) => top + (1 - value / 100) * plotHeight;
   const yForMargin = (value: number) => top + (1 - value / 20) * plotHeight;
@@ -632,7 +632,7 @@ function BidChart() {
   return (
     <div className="min-w-0 overflow-x-auto">
       <svg className="h-[360px] min-w-[720px] rounded-lg bg-white" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="入札額と落札確率、想定利益率の比較グラフ">
-        <rect x={xFor(9760)} y={top} width={xFor(9940) - xFor(9760)} height={plotHeight} fill="#dbeafe" opacity="0.7" />
+        <rect x={xFor(9380)} y={top} width={xFor(9490) - xFor(9380)} height={plotHeight} fill="#dbeafe" opacity="0.7" />
         {[0, 25, 50, 75, 100].map((tick) => (
           <g key={tick}>
             <line x1={left} x2={width - right} y1={yForProbability(tick)} y2={yForProbability(tick)} stroke="#e2e8f0" strokeDasharray="4 4" />
@@ -653,7 +653,7 @@ function BidChart() {
         <line x1={left} x2={left} y1={top} y2={height - bottom} stroke="#94a3b8" />
         <text x={width / 2} y={height - 4} textAnchor="middle" fontSize="12" fontWeight="700" fill="#475569">入札額（万円）</text>
         <text x="16" y={height / 2} transform={`rotate(-90 16 ${height / 2})`} textAnchor="middle" fontSize="12" fontWeight="700" fill="#475569">落札確率（%）</text>
-        <text x={xFor(9850)} y="46" textAnchor="middle" fontSize="12" fontWeight="700" fill="#1d4ed8">推奨価格帯</text>
+        <text x={xFor(9435)} y="46" textAnchor="middle" fontSize="12" fontWeight="700" fill="#1d4ed8">推奨価格帯</text>
         <g transform="translate(540 28)">
           <rect width="180" height="58" rx="8" fill="#ffffff" stroke="#e2e8f0" />
           <circle cx="18" cy="20" r="5" fill="#2563eb" />
@@ -662,13 +662,6 @@ function BidChart() {
           <text x="31" y="46" fontSize="12" fill="#334155">想定利益率</text>
         </g>
       </svg>
-      <div className="mt-3 grid gap-2 text-xs text-slate-600 sm:grid-cols-4">
-        {priceCurve.filter((_, index) => [2, 4, 6].includes(index)).map((item) => (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-2" key={item.price}>
-            <span className="font-bold">{item.label}万円</span> 落札{item.probability}% 利益{item.margin}% 利益額{item.profit}万円
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
