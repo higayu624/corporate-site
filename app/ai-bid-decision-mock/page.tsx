@@ -132,7 +132,7 @@ export default function Home() {
   );
 
   return (
-    <main className="min-h-screen bg-[#f6f8fb] text-slate-900">
+    <main className="min-h-screen overflow-x-hidden bg-[#f6f8fb] text-slate-900">
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-64 border-r border-slate-200 bg-white lg:block">
         <div className="flex h-16 items-center gap-3 border-b border-slate-200 px-6">
           <div className="flex size-9 items-center justify-center rounded-lg bg-blue-700 text-white">
@@ -155,20 +155,20 @@ export default function Home() {
       </aside>
 
       <section className="lg:pl-64">
-        <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur lg:px-8">
+        <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/95 px-3 py-3 backdrop-blur sm:px-4 lg:px-8">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div>
+            <div className="min-w-0">
               <p className="text-xs font-semibold text-blue-700">建設会社向け B2B SaaS モック</p>
-              <h1 className="text-xl font-bold lg:text-2xl">{titleForView(view)}</h1>
+              <h1 className="break-words text-lg font-bold sm:text-xl lg:text-2xl">{titleForView(view)}</h1>
             </div>
-            <div className="flex gap-2 overflow-x-auto lg:hidden">
+            <div className="flex gap-2 overflow-x-auto pb-1 lg:hidden">
               <MobileTab active={view === "dashboard"} label="一覧" onClick={() => setView("dashboard")} />
               <MobileTab active={view === "new"} label="新規" onClick={() => setView("new")} />
               <MobileTab active={view === "decision"} label="比較" onClick={() => setView("decision")} />
               <MobileTab active={view === "result"} label="結果" onClick={() => setView("result")} />
             </div>
             <button
-              className="flex items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 sm:w-auto"
               onClick={() => setView("new")}
             >
               <Plus size={18} />
@@ -177,7 +177,7 @@ export default function Home() {
           </div>
         </header>
 
-        <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-6 lg:px-8">
           {view === "dashboard" && <Dashboard onAnalyze={() => setView("new")} onDecision={() => setView("decision")} />}
           {view === "new" && <NewAnalysis onStart={() => setView("decision")} />}
           {view === "decision" && (
@@ -215,8 +215,8 @@ function Dashboard({ onAnalyze, onDecision }: { onAnalyze: () => void; onDecisio
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
-        <Panel title="進行中の案件一覧" action={<button onClick={onAnalyze} className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white">新規案件を分析</button>}>
-          <div className="overflow-x-auto">
+        <Panel title="進行中の案件一覧" action={<button onClick={onAnalyze} className="w-full rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white sm:w-auto">新規案件を分析</button>}>
+          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             <table className="w-full min-w-[860px] text-left text-sm">
               <thead className="border-b border-slate-200 bg-slate-50 text-xs text-slate-500">
                 <tr>
@@ -280,7 +280,7 @@ function NewAnalysis({ onStart }: { onStart: () => void }) {
           <p className="text-sm leading-6 text-slate-600">
             過去の類似案件、発注者・地域・工種別の傾向、過去の落札価格をもとに分析します。
           </p>
-          <button onClick={onStart} className="flex items-center justify-center gap-2 rounded-lg bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800">
+          <button onClick={onStart} className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800 md:w-auto">
             <Send size={18} />
             AIで分析を開始
           </button>
@@ -316,7 +316,7 @@ function Decision({
 }) {
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Summary label="案件名" value="東部幹線道路 改良工事" />
         <Summary label="発注者" value="さいたま市 建設局" />
         <Summary label="予定価格" value="9,780万円" />
@@ -328,8 +328,8 @@ function Decision({
           <BidChart />
           <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
             <p className="text-sm font-bold">選択中の価格案</p>
-            <p className="mt-4 text-3xl font-bold text-blue-800">{selected.price}</p>
-            <div className="mt-5 grid grid-cols-2 gap-3">
+            <p className="mt-4 break-words text-2xl font-bold text-blue-800 sm:text-3xl">{selected.price}</p>
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <MiniStat label="落札確率" value={`${selected.probability}%`} tone="blue" />
               <MiniStat label="想定利益率" value={`${selected.margin}%`} tone="green" />
               <MiniStat label="想定利益額" value={selected.profit} tone="green" />
@@ -354,7 +354,7 @@ function Decision({
               {scenario.badge && <span className="rounded-lg bg-blue-700 px-2.5 py-1 text-xs font-semibold text-white">{scenario.badge}</span>}
             </div>
             <p className="mt-4 text-2xl font-bold text-slate-950">{scenario.price}</p>
-            <div className="mt-4 grid grid-cols-3 gap-2 text-sm">
+            <div className="mt-4 grid grid-cols-1 gap-2 text-sm sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
               <MiniStat label="落札確率" value={`${scenario.probability}%`} tone="blue" />
               <MiniStat label="利益率" value={`${scenario.margin}%`} tone="green" />
               <MiniStat label="利益額" value={scenario.profit} tone="green" />
@@ -376,7 +376,7 @@ function Decision({
           </div>
         </Panel>
         <Panel title="類似案件">
-          <div className="overflow-x-auto">
+          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             <table className="w-full min-w-[760px] text-left text-sm">
               <thead className="border-b border-slate-200 bg-slate-50 text-xs text-slate-500">
                 <tr>{["案件名", "発注者", "地域", "工種", "自社入札額", "落札額", "結果", "利益率"].map((head) => <th className="px-3 py-3 font-semibold" key={head}>{head}</th>)}</tr>
@@ -395,16 +395,16 @@ function Decision({
         </Panel>
       </div>
 
-      <div className="sticky bottom-0 rounded-lg border border-slate-200 bg-white p-4 shadow-lg">
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-lg lg:sticky lg:bottom-0">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <p className="text-sm text-slate-600">選択中: <span className="font-bold text-slate-950">{selected.title} {selected.price}</span></p>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <button onClick={onEstimate} className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50">この価格で見積を作成</button>
-            <button className="flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50">
+          <p className="min-w-0 text-sm text-slate-600">選択中: <span className="break-words font-bold text-slate-950">{selected.title} {selected.price}</span></p>
+          <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto">
+            <button onClick={onEstimate} className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50 sm:w-auto">この価格で見積を作成</button>
+            <button className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50 sm:w-auto">
               <SlidersHorizontal size={17} />
               入札額を調整する
             </button>
-            <button onClick={onApproval} className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">社内承認へ進む</button>
+            <button onClick={onApproval} className="w-full rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 sm:w-auto">社内承認へ進む</button>
           </div>
         </div>
       </div>
@@ -444,7 +444,7 @@ function ResultRegistration({
             <textarea className="min-h-32 w-full rounded-lg border border-slate-300 px-3 py-2.5" defaultValue="価格差は約2.3%。技術点評価は同水準だったため、価格競争力が主因と推定。" />
           </label>
         </div>
-        <button onClick={onRegister} className="mt-6 rounded-lg bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800">
+        <button onClick={onRegister} className="mt-6 w-full rounded-lg bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800 sm:w-auto">
           結果を登録して学習データに反映
         </button>
       </Panel>
@@ -485,11 +485,11 @@ function MobileTab({ active, label, onClick }: { active: boolean; label: string;
 function Panel({ title, action, children }: { title: string; action?: React.ReactNode; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-base font-bold">{title}</h2>
-        {action}
+      <div className="flex flex-col gap-3 border-b border-slate-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <h2 className="min-w-0 break-words text-base font-bold">{title}</h2>
+        {action && <div className="w-full sm:w-auto">{action}</div>}
       </div>
-      <div className="p-5">{children}</div>
+      <div className="p-4 sm:p-5">{children}</div>
     </section>
   );
 }
@@ -506,7 +506,7 @@ function Metric({ icon, label, value, note, tone = "blue" }: { icon: React.React
         <p className="text-sm font-semibold text-slate-600">{label}</p>
         <div className={`flex size-10 items-center justify-center rounded-lg ${colors[tone]}`}>{icon}</div>
       </div>
-      <p className="mt-4 text-3xl font-bold">{value}</p>
+      <p className="mt-4 text-2xl font-bold sm:text-3xl">{value}</p>
       <p className="mt-2 text-xs text-slate-500">{note}</p>
     </div>
   );
@@ -535,7 +535,7 @@ function MiniStat({ label, value, tone }: { label: string; value: string; tone: 
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-3">
       <p className="text-xs text-slate-500">{label}</p>
-      <p className={`mt-1 text-base font-bold ${color}`}>{value}</p>
+      <p className={`mt-1 break-words text-base font-bold ${color}`}>{value}</p>
     </div>
   );
 }
@@ -551,7 +551,7 @@ function Percent({ value }: { value: number }) {
       <div className="h-2 w-20 rounded-full bg-slate-100">
         <div className="h-2 rounded-full bg-blue-600" style={{ width: `${value}%` }} />
       </div>
-      <span className="font-semibold text-blue-700">{value}%</span>
+      <span className="shrink-0 font-semibold text-blue-700">{value}%</span>
     </div>
   );
 }
@@ -630,8 +630,8 @@ function BidChart() {
   const marginLine = priceCurve.map((item) => `${xFor(item.price)},${yForMargin(item.margin)}`).join(" ");
 
   return (
-    <div className="min-w-0 overflow-x-auto">
-      <svg className="h-[360px] min-w-[720px] rounded-lg bg-white" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="入札額と落札確率、想定利益率の比較グラフ">
+    <div className="min-w-0">
+      <svg className="h-auto w-full rounded-lg bg-white" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="入札額と落札確率、想定利益率の比較グラフ">
         <rect x={xFor(9380)} y={top} width={xFor(9490) - xFor(9380)} height={plotHeight} fill="#dbeafe" opacity="0.7" />
         {[0, 25, 50, 75, 100].map((tick) => (
           <g key={tick}>
