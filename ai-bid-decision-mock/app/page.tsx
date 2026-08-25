@@ -216,7 +216,34 @@ function Dashboard({ onAnalyze, onDecision }: { onAnalyze: () => void; onDecisio
 
       <div className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
         <Panel title="進行中の案件一覧" action={<button onClick={onAnalyze} className="w-full rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white sm:w-auto">新規案件を分析</button>}>
-          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <div className="space-y-3 md:hidden">
+            {tenders.map((tender) => (
+              <button
+                className="w-full rounded-lg border border-slate-200 bg-white p-4 text-left shadow-sm"
+                key={tender.name}
+                onClick={onDecision}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="break-words text-sm font-bold text-slate-950">{tender.name}</p>
+                    <p className="mt-1 text-xs text-slate-500">{tender.owner}</p>
+                  </div>
+                  <StatusBadge status={tender.status} />
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
+                  <MobileDatum label="工種" value={tender.type} />
+                  <MobileDatum label="提出期限" value={tender.due} />
+                  <MobileDatum label="推奨入札額" value={tender.price} emphasis />
+                  <MobileDatum label="想定利益率" value={`${tender.margin}%`} tone="green" />
+                </div>
+                <div className="mt-4">
+                  <p className="mb-2 text-xs font-semibold text-slate-500">落札確率</p>
+                  <Percent value={tender.probability} />
+                </div>
+              </button>
+            ))}
+          </div>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[860px] text-left text-sm">
               <thead className="border-b border-slate-200 bg-slate-50 text-xs text-slate-500">
                 <tr>
@@ -376,7 +403,25 @@ function Decision({
           </div>
         </Panel>
         <Panel title="類似案件">
-          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <div className="space-y-3 md:hidden">
+            {similarCases.map((row) => (
+              <div className="rounded-lg border border-slate-200 bg-white p-4" key={row[0]}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="break-words text-sm font-bold text-slate-950">{row[0]}</p>
+                    <p className="mt-1 text-xs text-slate-500">{row[1]}・{row[2]}・{row[3]}</p>
+                  </div>
+                  <span className={resultClass(row[6])}>{row[6]}</span>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
+                  <MobileDatum label="自社入札額" value={row[4]} emphasis />
+                  <MobileDatum label="落札額" value={row[5]} />
+                  <MobileDatum label="利益率" value={row[7]} tone="green" />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[760px] text-left text-sm">
               <thead className="border-b border-slate-200 bg-slate-50 text-xs text-slate-500">
                 <tr>{["案件名", "発注者", "地域", "工種", "自社入札額", "落札額", "結果", "利益率"].map((head) => <th className="px-3 py-3 font-semibold" key={head}>{head}</th>)}</tr>
@@ -536,6 +581,26 @@ function MiniStat({ label, value, tone }: { label: string; value: string; tone: 
     <div className="rounded-lg border border-slate-200 bg-white p-3">
       <p className="text-xs text-slate-500">{label}</p>
       <p className={`mt-1 break-words text-base font-bold ${color}`}>{value}</p>
+    </div>
+  );
+}
+
+function MobileDatum({
+  label,
+  value,
+  emphasis = false,
+  tone = "slate",
+}: {
+  label: string;
+  value: string;
+  emphasis?: boolean;
+  tone?: "slate" | "green";
+}) {
+  const valueColor = tone === "green" ? "text-emerald-700" : "text-slate-900";
+  return (
+    <div className="min-w-0 rounded-lg bg-slate-50 p-3">
+      <p className="text-[11px] font-semibold text-slate-500">{label}</p>
+      <p className={`mt-1 break-words ${emphasis ? "font-bold" : "font-semibold"} ${valueColor}`}>{value}</p>
     </div>
   );
 }
