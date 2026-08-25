@@ -440,7 +440,7 @@ function Decision({
         </Panel>
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-lg lg:sticky lg:bottom-0">
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-lg">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <p className="min-w-0 text-sm text-slate-600">選択中: <span className="break-words font-bold text-slate-950">{selected.title} {selected.price}</span></p>
           <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto">
