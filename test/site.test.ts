@@ -11,8 +11,8 @@ describe("site data", () => {
     expect(services).toHaveLength(3);
     expect(services[0].title).toContain("eコマース");
   });
-  it("実績が3件ある", () => {
-    expect(works).toHaveLength(3);
+  it("実績が4件ある", () => {
+    expect(works).toHaveLength(4);
     expect(works.find((w) => w.title.includes("抹茶"))).toBeTruthy();
   });
   it("外部リンクが3件ある", () => {

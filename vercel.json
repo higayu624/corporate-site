@@ -1,0 +1,8 @@
+{
+  "env": {
+    "USE_MOCK_AI": "true",
+    "DEBATE_MODE": "full",
+    "ENABLE_DEBATE_DEBUG": "true",
+    "EGOV_API_BASE_URL": "https://laws.e-gov.go.jp/api/2"
+  }
+}

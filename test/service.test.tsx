@@ -7,6 +7,6 @@ describe("Service", () => {
     render(<Service />);
     expect(screen.getByText("eコマース構築")).toBeInTheDocument();
     expect(screen.getByText("業務特化AIモデル構築")).toBeInTheDocument();
-    expect(screen.getByText("AIでの業務削減")).toBeInTheDocument();
+    expect(screen.getByText("プロダクト構築運用")).toBeInTheDocument();
   });
 });

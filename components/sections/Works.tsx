@@ -90,7 +90,7 @@ export default function Works() {
         <h2 className="mt-3 mb-14 font-display text-3xl font-extrabold tracking-tight text-white md:text-4xl">
           実績
         </h2>
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {works.map((w) => (
             <WorkCard key={w.title} w={w} />
           ))}

@@ -29,6 +29,13 @@ export type Work = {
 
 export const works: Work[] = [
   {
+    title: "Legal Debate AI",
+    desc: "複数AIの独立分析・相互反証とe-Gov一次情報で、日本法の回答根拠を検証するPoC。",
+    tags: ["Legal AI", "Multi-LLM", "e-Gov"],
+    url: "/legal-ai",
+    category: "AI / Legal Tech",
+  },
+  {
     title: "Sports JOG 代理店販売ECサイト",
     desc: "ECサイトの構築から運用まで担当。在庫管理を含む販売基盤を整備。",
     tags: ["EC構築", "在庫管理", "運用"],
