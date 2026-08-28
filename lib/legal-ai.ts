@@ -15,7 +15,7 @@ const verificationSchema=z.object({status:z.enum(["pass","revise","insufficient"
 type Analysis=z.infer<typeof analysisSchema>; export type Opinion=z.infer<typeof opinionSchema>; export type Rebuttal=z.infer<typeof rebuttalSchema>; export type Judge=z.infer<typeof judgeSchema>; type Verification=z.infer<typeof verificationSchema>;
 export type LegalResponse={answer:{conclusion:string;explanation:string;keyIssues:string[];counterView:string[];missingFacts:string[];confidence:number;disclaimer:string};sources:LawSource[];debate:{opinions:Opinion[];rebuttals:Rebuttal[];judge:Judge};meta:{asOfDate:string;providersSucceeded:string[];providersFailed:string[];verificationStatus:string;durationMs:number;mockMode:boolean}};
 
-const SYSTEM="あなたは日本法を分析するAIです。提示したe-Gov法令一次情報を最優先し、条文を捏造しないでください。事実不足なら断定せず、必要な追加事実を示してください。出力は指定されたJSONだけにしてください。";
+const SYSTEM="あなたは日本法を分析するAIです。提示したe-Gov法令一次情報を最優先し、条文を捏造しないでください。事実不足なら断定せず、必要な追加事実を示してください。すべての文章フィールドを自然で分かりやすい日本語で書き、出力は指定されたJSONだけにしてください。";
 const roles:Record<ProviderId,string>={openai:"法的要件を分解し、各要件に事実を当てはめてください。",anthropic:"例外、反対解釈、事実不足、過度な断定を重点的に探してください。",google:"周辺法令や別の法的構成を検討し、一つの法律に早期収束しないでください。"};
 const timeoutMs=()=>Number(process.env.AI_TIMEOUT_MS||30000);
 const cleanJson=(text:string)=>JSON.parse(text.trim().replace(/^```(?:json)?/i,"").replace(/```$/,"").trim());
