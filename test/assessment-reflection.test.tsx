@@ -25,14 +25,18 @@ describe('社員の振り返り', () => {
     await user.type(screen.getByLabelText('今日の振り返り'), '仕様書を見直した。');
     await user.click(screen.getByRole('button', { name: 'AIで整理' }));
     await screen.findByLabelText('成果・実績');
+    expect(screen.getByLabelText('自分が担当した範囲').closest('details')).not.toHaveAttribute('open');
+    await user.click(screen.getByText('担当範囲・根拠を補足'));
     await user.type(screen.getByLabelText('自分が担当した範囲'), '仕様書のチェック');
     await user.type(screen.getByLabelText('確認できる事実・根拠'), 'レビューコメント');
     await user.click(screen.getByRole('button', { name: '回答を整理案に反映' }));
     expect((screen.getByLabelText('行動・担当範囲') as HTMLTextAreaElement).value).toContain('仕様書のチェック');
+    await user.click(screen.getByText('課題・次の一歩を編集'));
     await user.clear(screen.getByLabelText('次の一歩'));
     await user.type(screen.getByLabelText('次の一歩'), '明日リーダーに確認する');
     await user.click(screen.getByRole('button', { name: '記録を保存' }));
     expect(screen.getByRole('button', { name: '保存済み' })).toBeDisabled();
+    await user.click(screen.getByText(/過去の記録/));
     await user.click(screen.getByRole('button', { name: /仕様書を見直した。/ }));
     expect(screen.getByRole('region', { name: '保存した記録' })).toHaveTextContent('明日リーダーに確認する');
     expect(screen.getByRole('region', { name: '保存した記録' })).toHaveTextContent('仕様書を見直した。');

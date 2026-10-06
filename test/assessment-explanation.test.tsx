@@ -22,7 +22,10 @@ describe('評価理由の説明', () => {
   it('質問例で根拠を示し、編集した説明を一度だけメモに残す', async () => {
     const user = userEvent.setup(); render(<ExplanationPage />);
     await user.click(screen.getByRole('button', { name: 'どの実績が評価の根拠になったか' }));
-    const explanation = await screen.findByLabelText('説明案');
+    await screen.findByText('回答の要点');
+    expect(screen.getByLabelText('説明案').closest('details')).not.toHaveAttribute('open');
+    await user.click(screen.getByText('説明文を編集'));
+    const explanation = screen.getByLabelText('説明案');
     expect((explanation as HTMLTextAreaElement).value).toContain('実装と全体進行は別の担当者');
     await user.click(screen.getByText(/根拠の記録を確認/));
     expect(screen.getByText(/6月18日に予定どおり公開/)).toBeInTheDocument();
@@ -41,6 +44,7 @@ describe('評価理由の説明', () => {
     await user.click(screen.getByRole('button', { name: '説明材料を作成' }));
     await screen.findByLabelText('説明案');
     expect(screen.getByText('この質問を判断できる根拠は、サンプル記録にありません。上長に確認してください。')).toBeInTheDocument();
+    await user.click(screen.getByText(/面談メモ/, { selector: 'summary' }));
     await user.type(screen.getByLabelText('面談で確認したい追加質問'), '成果の担当範囲を再確認したい');
     await user.click(screen.getByRole('button', { name: '確認事項を残す' }));
     expect(screen.getByRole('region', { name: '面談メモ' })).toHaveTextContent('成果の担当範囲を再確認したい');

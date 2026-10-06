@@ -125,3 +125,65 @@
 @media(max-width:1100px) { .header { padding:0 24px; gap:14px; } .headerNote { display:none; } .main { padding:28px 24px 40px; } .grid { grid-template-columns:235px minmax(0,1fr); gap:18px; } .reflectionGrid { grid-template-columns:minmax(0,1fr) 280px; gap:18px; } .explanationGrid { grid-template-columns:270px minmax(0,1fr); gap:18px; } .profile { flex-wrap:wrap; } .profileAction { margin-left:0; } .tabs { gap:16px; } }
 @media(max-width:760px) { .header { padding:16px; flex-direction:column; align-items:start; gap:14px; } .nav { width:100%; overflow:auto; } .nav a { flex:1; white-space:nowrap; padding:10px 12px; text-align:center; font-size:11px; } .main { padding:24px 16px 32px; } .pageHeading { align-items:start; flex-direction:column; gap:15px; } .title { font-size:24px; } .grid,.reflectionGrid,.explanationGrid { grid-template-columns:minmax(0,1fr); } .process { display:none; } .employeeList { display:flex; overflow:auto; } .employee { min-width:190px; flex:0 0 190px; } .employeeFoot { display:none; } .profile,.content { padding:22px 20px; } .profileAction { margin-left:auto; } .stats { padding:20px; gap:10px; } .stat strong { font-size:20px; } .stat .statText { font-size:13px; } .twoColumns { grid-template-columns:1fr; } .tabs { padding:0 20px; } .footer { flex-direction:column; gap:5px; } .notice { padding:12px 14px; } .reflectionGrid > aside { order:2; } .explanationGrid { gap:18px; } .empty { padding:36px 20px; } .welcome { padding:18px; } }
 @media(prefers-reduced-motion:reduce) { .app * { transition:none !important; animation:none !important; } }
+/* Task-first layout: one main action, optional details on request. */
+.main { max-width:1240px; }
+.header { min-height:72px; }
+.title { font-size:32px; }
+.eyebrow { letter-spacing:.5px; font-size:12px; }
+.subtitle { font-size:14px; line-height:1.7; }
+.body { font-size:14px; line-height:1.85; }
+.small { font-size:12px; }
+.primary,.secondary { font-size:14px; min-height:44px; }
+.label { font-size:14px; }
+.input { font-size:14px; line-height:1.8; }
+.panelHead h2 { font-size:16px; }
+.panelHead { padding:18px 24px; }
+.stats { padding:16px 28px; }
+.empty { padding:36px 24px; }
+.empty h3 { font-size:16px; }
+.empty p { font-size:13px; }
+.tabs { gap:24px; }
+.tabs button { font-size:14px; }
+.sectionLabel { font-size:14px; }
+.footer { font-size:12px; align-items:start; }
+.demoDetails { max-width:400px; }
+.demoDetails summary { cursor:pointer; color:var(--teal); }
+.demoDetails p { margin:8px 0 0; }
+.disclosure { margin-top:18px; border:1px solid var(--line); border-radius:9px; padding:14px 16px; }
+.disclosure summary { cursor:pointer; color:var(--teal); font-weight:600; font-size:13px; }
+.disclosure[open] summary { margin-bottom:16px; }
+.historyDisclosure > summary { cursor:pointer; padding:20px 22px; font-size:14px; font-weight:600; }
+.historyDisclosure > summary span { font-size:12px; color:var(--muted); font-weight:400; margin-left:8px; }
+.historyDisclosure[open] > summary { border-bottom:1px solid var(--line); }
+.explanationGrid { grid-template-columns:minmax(0,1fr) 280px; }
+.explanationGrid > *, .reflectionGrid > * { min-width:0; }
+.questionList { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+.question { font-size:13px; padding:10px 12px; border-radius:24px; }
+.question svg { flex-shrink:0; }
+.answerPoints { padding-left:22px; margin:0; display:grid; gap:12px; line-height:1.85; font-size:14px; }
+.answerPoints li::marker { color:var(--teal); }
+.callout { font-size:12px; }
+.evidence summary { font-size:13px; padding:4px 0; }
+@media(max-width:760px) {
+ .title { font-size:26px; }
+ .pageHeading { margin-bottom:22px; gap:12px; }
+ .grid,.reflectionGrid,.explanationGrid { grid-template-columns:minmax(0,1fr); }
+ .explanationGrid > aside { order:2; }
+ .employee { min-width:145px; flex-basis:145px; padding:10px; gap:8px; }
+ .employee .avatar { width:30px; height:30px; font-size:10px; }
+ .employee span.small { display:none; }
+ .grid > aside .panelHead { display:none; }
+ .profile { padding:18px; gap:10px; }
+ .profile h2 { font-size:18px; }
+ .profileAction { width:100%; }
+ .profileAction .primary { width:100%; }
+ .stats { padding:16px; }
+ .stat p { font-size:10px; }
+ .tabs { gap:20px; }
+ .tabs button { font-size:12px; }
+ .card { padding:16px; }
+ .cardTop { flex-wrap:wrap; gap:4px; }
+ .questionList { display:grid; }
+ .question { border-radius:9px; font-size:13px; }
+ .period { font-size:11px; white-space:normal; }
+}

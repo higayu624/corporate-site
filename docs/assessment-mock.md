@@ -38,3 +38,12 @@ npm run build
 ```
 
 公開先は既存Vercelプロジェクト `corporate`。既存プロジェクトとGitHubの接続設定に従ってリリースしてください。
+
+## 表示の改善（2026-10-06）
+
+主要な操作を最初に表示し、補足情報は開閉式に変更。
+- 面談準備：社員選択と資料整理を中心に表示。
+- 振り返り：入力→整理結果の確認・保存。補足質問と履歴は必要に応じて開く。
+- 評価理由：質問を先頭に置き、回答を箇条書きで表示。説明文の編集・評価コメント・履歴は開閉式。
+
+参考：[NN/g Progressive Disclosure](https://www.nngroup.com/articles/progressive-disclosure/)。

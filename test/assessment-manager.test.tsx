@@ -8,6 +8,7 @@ describe('上長の面談準備', () => {
   it('選択した社員の記録と資料だけを表示する', async () => {
     const user = userEvent.setup();
     render(<ManagerPage />);
+    expect(screen.getByRole('heading', { name: '面談準備', level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '佐藤 美咲' })).toBeInTheDocument();
     expect(screen.getByLabelText('蓄積された記録数')).toHaveTextContent('4');
     await user.click(screen.getByRole('button', { name: /田中 悠斗/ }));
