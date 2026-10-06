@@ -209,3 +209,7 @@
 .twoStats { grid-template-columns:repeat(2,minmax(0,1fr)); }
 .memoSection { border-top:1px solid var(--line); padding:24px 28px; }
 @media(max-width:760px) { .memoSection { padding:22px 20px; } }
+.comparableSection { margin-top:26px; }
+.caseHeading { margin-bottom:10px; }
+.comparableSection .twoColumns { align-items:start; }
+.comparableSection .card { margin-bottom:12px; }

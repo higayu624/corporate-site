@@ -1,42 +1,35 @@
 import type { Employee } from './demo';
 
-export type ReviewGoal = { title: string; expectation: string; recordIds: string[] };
-export type PastReview = { id: string; period: string; rating: string; comment: string; goals: ReviewGoal[] };
-export const pastReviews: Record<string, PastReview[]> = {
-  misaki: [
-    { id: 'ms-2025-09', period: '2025年9月', rating: '一部に支援が必要', comment: '制作は安定。レビュー調整は上長の支援が必要。', goals: [] },
-    { id: 'ms-2026-03', period: '2026年3月', rating: '一部に支援が必要', comment: '担当領域の自立を次期の目標とし、レビュー手順の共有を期待。', goals: [
-      { title: '担当業務の自立', expectation: '制作とレビュー調整を自律的に進める', recordIds: ['ms-1'] },
-      { title: 'チームへの貢献', expectation: 'レビュー手順をチームに共有する', recordIds: ['ms-2'] },
-    ] },
-  ],
-  yuto: [
-    { id: 'yt-2025-09', period: '2025年9月', rating: '一部に支援が必要', comment: '実装の品質は安定。仕様確認に支援が必要。', goals: [] },
-    { id: 'yt-2026-03', period: '2026年3月', rating: '一部に支援が必要', comment: '実装品質の維持、問い合わせ改善、着手前の仕様確認を期待。', goals: [
-      { title: '実装・テスト', expectation: '品質を保って改修を完了する', recordIds: ['yt-2'] },
-      { title: '運用改善', expectation: '問い合わせ対応の仕組みを整える', recordIds: ['yt-1'] },
-      { title: '着手前の仕様確認', expectation: '不明点を着手前に共有する', recordIds: ['yt-3'] },
-    ] },
-  ],
-  haruka: [
-    { id: 'hs-2025-09', period: '2025年9月', rating: '期待を満たしている', comment: '単独案件の進行と顧客調整を安定して担当。', goals: [] },
-    { id: 'hs-2026-03', period: '2026年3月', rating: '期待を満たしている', comment: '複数案件の進行安定化と、顧客との合意形成を期待。情報共有は改善事項。', goals: [
-      { title: '複数案件の進行', expectation: '合意した納期で納品する', recordIds: ['hs-1'] },
-      { title: '顧客との合意形成', expectation: '追加要望と対応範囲を合意する', recordIds: ['hs-2'] },
-    ] },
-  ],
+export type EvaluationCase = { id: string; role: string; period: string; topics: string[]; achievement: string; rating: string; reason: string };
+export const evaluationCases: EvaluationCase[] = [
+  { id: 'DS-01', role: 'デザイナー', period: '2025年下期', topics: ['サイト制作', 'レビュー調整'], achievement: 'デザイン制作とレビュー調整を担当し、予定どおり公開。', rating: '期待を満たしている', reason: '担当範囲の完了と、調整業務の自立を確認。チーム全体の成果とは分けて評価。' },
+  { id: 'DS-02', role: 'デザイナー', period: '2025年上期', topics: ['レビュー手順'], achievement: 'レビュー用チェックリストを作成し、チームで使用。', rating: '期待を満たしている', reason: '手順の整備・共有を評価。手戻りの削減効果は未計測のため加点せず。' },
+  { id: 'EN-01', role: 'エンジニア', period: '2025年下期', topics: ['API改修', '運用改善'], achievement: 'API改修・テストを完了し、FAQの運用を開始。', rating: '期待を満たしている', reason: '実装の完了と運用改善の実行を確認。対応時間の削減は未計測。' },
+  { id: 'EN-02', role: 'エンジニア', period: '2025年上期', topics: ['仕様確認'], achievement: '実装は完了したが、着手前の仕様確認に課題。', rating: '一部に支援が必要', reason: '仕様確認不足をレビュー記録で確認し、上長の支援が必要と判断。' },
+  { id: 'DR-01', role: 'ディレクター', period: '2025年下期', topics: ['進行管理'], achievement: '複数案件の進行を担当し、合意した納期で納品。', rating: '期待を満たしている', reason: '納期と進行管理の担当範囲を確認。制作・実装の成果とは分けて評価。' },
+  { id: 'DR-02', role: 'ディレクター', period: '2025年上期', topics: ['顧客調整'], achievement: '追加要望を整理し、対応範囲を顧客と合意。', rating: '期待を満たしている', reason: '合意形成を評価。チームへの情報共有は改善事項として記録。' },
+];
+const recordTopics: Record<string, string[]> = {
+  'ms-1': ['サイト制作', 'レビュー調整'], 'ms-2': ['レビュー手順'], 'ms-3': ['後輩サポート'], 'ms-4': ['時間配分'],
+  'yt-1': ['運用改善'], 'yt-2': ['API改修'], 'yt-3': ['仕様確認'],
+  'hs-1': ['進行管理'], 'hs-2': ['顧客調整'],
 };
 
-// デモ専用の固定ルール。履歴の目標と本人の確認済み記録を対応付ける。
-export function buildEvaluation(employee: Employee, history: PastReview[] = pastReviews[employee.id] ?? []) {
-  const previous = history.at(-1);
-  const criteria = (previous?.goals ?? []).map(goal => {
-    const records = employee.records.filter(record => goal.recordIds.includes(record.id));
-    const supported = goal.recordIds.length > 0 && records.length === goal.recordIds.length && records.every(record => record.verified);
-    return { ...goal, recordIds: records.map(record => record.id), supported, reason: supported ? records.map(record => record.body.split('。')[0] + '。').join('') : '本人の投稿のみ。面談で確認が必要です。' };
+// デモ専用。職種・業務の共通点で架空事例を選び、確認済み記録との対応を示す。
+export function buildEvaluation(employee: Employee, cases: EvaluationCase[] = evaluationCases) {
+  const role = employee.role.split(' / ')[0];
+  const topics = employee.records.flatMap(record => recordTopics[record.id] ?? []);
+  const verifiedTopics = employee.records.filter(record => record.verified).flatMap(record => recordTopics[record.id] ?? []);
+  const comparableCases = cases.filter(example => example.role === role && example.topics.some(topic => topics.includes(topic))).map(example => ({
+    ...example, common: example.topics.filter(topic => topics.includes(topic)), verifiedMatches: example.topics.filter(topic => verifiedTopics.includes(topic)).length,
+  })).sort((a, b) => b.verifiedMatches - a.verifiedMatches || a.id.localeCompare(b.id));
+  const reference = comparableCases.find(example => example.verifiedMatches > 0);
+  const criteria = employee.achievements.map(achievement => {
+    const records = employee.records.filter(record => achievement.recordIds.includes(record.id));
+    const supported = records.length === achievement.recordIds.length && records.length > 0 && records.every(record => record.verified);
+    return { title: achievement.title, recordIds: records.map(record => record.id), supported, reason: achievement.detail };
   });
-  const supportedCount = criteria.filter(criterion => criterion.supported).length;
-  const rating = criteria.length > 0 && supportedCount === criteria.length ? '期待を満たしている' : '面談で確認が必要';
-  const comment = criteria.length ? `前回の目標${criteria.length}項目のうち、${supportedCount}項目に確認済みの記録があります。` : '評価に必要な過去の目標データがありません。';
-  return { previous, criteria, rating, comment, supportedCount };
+  const rating = reference?.rating ?? '面談で確認が必要';
+  const comment = reference ? `事例${reference.id}と共通する実績を確認。近い事例の評価区分を参考にした案です。` : '比較できる事例または確認済み記録が不足しています。';
+  return { criteria, comparableCases, reference, rating, comment };
 }
