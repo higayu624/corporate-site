@@ -3,7 +3,7 @@ import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ManagerPage from '@/app/assessment-mock/manager/page';
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); window.history.replaceState({}, '', '/'); });
 describe('上長の面談準備', () => {
   it('選択した社員の記録と資料だけを表示する', async () => {
     const user = userEvent.setup();
@@ -47,6 +47,13 @@ describe('上長の面談準備', () => {
     await user.click(screen.getByRole('button', { name: /田中 悠斗/ }));
     expect(screen.queryByRole('tab')).not.toBeInTheDocument();
     expect(screen.getByLabelText('面談準備状況')).toHaveTextContent('0 / 3');
+  });
+  it('評価案からの社員リンクで同じ社員の実績を表示する', async () => {
+    window.location.hash = 'yuto';
+    render(<ManagerPage />);
+    expect(await screen.findByRole('heading', { name: '田中 悠斗' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: '実績・行動' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '評価案を見る' })).toHaveAttribute('href', '/assessment-mock/explanation#yuto');
   });
   it('矢印キーで資料のタブを切り替えられる', async () => {
     const user = userEvent.setup();

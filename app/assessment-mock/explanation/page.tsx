@@ -1,84 +1,58 @@
 'use client';
-import { useState } from 'react';
-import { ArrowRight, Check, Plus, Send, Sparkles } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { CalendarDays, Check, FileCheck2 } from 'lucide-react';
+import Link from 'next/link';
 import { employees, periodLabel } from '../_data/demo';
-import Evidence from '../_components/evidence';
-import { answerQuestion, questionExamples, type Answer } from './answers';
+import { buildEvaluation, pastReviews } from '../_data/evaluations';
+import SourceLinks from '../_components/source-links';
 import s from '../mock.module.css';
 
-type Exchange = { id: string; question: string; answer: Answer; draft: string };
-type Note = { id: string; sourceId: string; title: string; body: string };
+type Edit = { rating: string; comment: string };
+const ratings = ['期待を上回っている', '期待を満たしている', '一部に支援が必要', '面談で確認が必要'];
 export default function ExplanationPage() {
-  const employee = employees[0];
-  const [question, setQuestion] = useState('');
-  const [exchanges, setExchanges] = useState<Exchange[]>([]);
-  const [selectedId, setSelectedId] = useState('');
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [followup, setFollowup] = useState('');
+  const [employeeId, setEmployeeId] = useState(employees[0].id);
+  const [edits, setEdits] = useState<Record<string, Edit>>({});
+  const [confirmed, setConfirmed] = useState<string[]>([]);
   const [error, setError] = useState('');
-  const [status, setStatus] = useState('');
-  const [busy, setBusy] = useState(false);
-  const selected = exchanges.find(e => e.id === selectedId);
-  const added = !!selected && notes.some(n => n.sourceId === selected.id);
-
-  async function ask(text: string) {
-    if (busy) return;
-    if (!text.trim()) { setError('質問を入力してください。質問例から選ぶこともできます。'); return; }
-    setError(''); setBusy(true); setQuestion(text.trim()); setStatus('記録をもとに説明材料を準備しています…');
-    await new Promise(resolve => setTimeout(resolve, 350));
-    const answer = answerQuestion(text);
-    const exchange: Exchange = { id: crypto.randomUUID(), question: text.trim(), answer, draft: answer.explanation };
-    setExchanges(current => [...current, exchange]); setSelectedId(exchange.id); setBusy(false); setStatus('説明案を作成しました。');
+  useEffect(() => {
+    function selectFromLink() {
+      const id = window.location.hash.slice(1);
+      if (employees.some(employee => employee.id === id)) setEmployeeId(id);
+    }
+    selectFromLink(); window.addEventListener('hashchange', selectFromLink);
+    return () => window.removeEventListener('hashchange', selectFromLink);
+  }, []);
+  const employee = employees.find(employee => employee.id === employeeId)!;
+  const evaluation = buildEvaluation(employee);
+  const edit = edits[employeeId] ?? { rating: evaluation.rating, comment: evaluation.comment };
+  const done = confirmed.includes(employeeId);
+  const unchecked = employee.records.filter(record => !record.verified);
+  function updateEdit(value: Partial<Edit>) { setEdits(current => ({ ...current, [employeeId]: { ...edit, ...value } })); setConfirmed(current => current.filter(id => id !== employeeId)); setError(''); }
+  function confirm() {
+    if (!edit.comment.trim()) { setError('評価コメントを入力してください。'); return; }
+    setConfirmed(current => [...current, employeeId]); setError('');
   }
-  function addNote() {
-    if (!selected || added) return;
-    if (!selected.draft.trim()) { setError('説明案を入力してから追加してください。'); return; }
-    setNotes(current => [...current, { id: crypto.randomUUID(), sourceId: selected.id, title: selected.question, body: selected.draft }]); setError(''); setStatus('説明案を面談メモに追加しました。');
-  }
-  function addFollowup() {
-    const text = followup.trim();
-    if (!text) { setError('面談で確認したい追加質問を入力してください。'); return; }
-    if (notes.some(n => n.sourceId === 'followup' && n.body === text)) { setError('同じ確認事項は追加済みです。'); return; }
-    setNotes(current => [...current, { id: crypto.randomUUID(), sourceId: 'followup', title: '面談での確認事項', body: text }]); setFollowup(''); setError(''); setStatus('追加質問を確認事項として残しました。');
-  }
-
   return <>
-    <div className={s.pageHeading}><div><p className={s.eyebrow}>上長・社員向け</p><h1 className={s.title}>評価理由を確認</h1><p className={s.subtitle}>質問から、説明の要点と根拠を確認。</p></div><div className={s.period}>{employee.name} · {periodLabel}</div></div>
-    <div className={s.explanationGrid}>
+    <div className={s.pageHeading}><div><p className={s.eyebrow}>上長向け</p><h1 className={s.title}>評価案と根拠</h1><p className={s.subtitle}>今回の実績 × 過去の評価から、社員別に出力。</p></div><div className={s.period}><CalendarDays size={15} />{periodLabel}</div></div>
+    <div className={s.grid}>
+      <aside><section className={s.panel}><div className={s.panelHead}><h2>評価対象の社員</h2><span className={s.small}>3名</span></div><div className={s.employeeList}>{employees.map(item => <button key={item.id} className={s.employee} aria-pressed={item.id === employeeId} onClick={() => { setEmployeeId(item.id); setError(''); }}><span className={s.avatar}>{item.initials}</span><span><strong>{item.name}</strong><span className={s.small}>{item.role}</span></span></button>)}</div></section></aside>
       <div>
         <section className={s.panel}>
-          <div className={s.panelHead}><h2>評価について質問する</h2><Sparkles size={16} /></div>
+          <div className={s.profile}><span className={s.avatar}>{employee.initials}</span><div><h2>{employee.name}</h2><p className={s.small}>{employee.role}</p></div><div className={s.profileAction}><Link className={s.secondary} href={`/assessment-mock/manager#${employee.id}`}>実績を確認</Link></div></div>
           <div className={s.content}>
-            <div className={s.questionList}>{questionExamples.map(text => <button key={text} className={s.question} onClick={() => ask(text)} disabled={busy}>{text}<ArrowRight size={14} /></button>)}</div>
-            <label className={s.label} htmlFor="evaluation-question">評価理由についての質問</label>
-            <textarea id="evaluation-question" className={s.input} rows={2} value={question} disabled={busy} onChange={e => setQuestion(e.target.value)} placeholder="聞きたいことを入力…" />
-            <div className={s.actionRow}><span /><button className={s.primary} disabled={busy} onClick={() => ask(question)}><Send size={14} />{busy ? '準備中…' : '説明材料を作成'}</button></div>
-            {error && <p className={s.error} role="alert">{error}</p>}<p className={s.status} role="status">{status}</p>
+            <section className={s.evaluationSummary} role="region" aria-label="今回の評価案"><div className={s.cardTop}><span className={s.badge}>{done ? '上長確認済み · デモ' : 'AI評価案 · デモ'}</span><span className={s.small}>{evaluation.previous?.period}の評価を参照</span></div><h2>{edit.rating}</h2><p className={s.body}>{edit.comment}</p></section>
+            <h3 className={s.sectionLabel} style={{ marginTop: 24 }}><FileCheck2 size={16} />評価の根拠</h3>
+            {evaluation.criteria.map(criterion => <article className={s.card} key={criterion.title}><div className={s.cardTop}><h4 className={s.cardTitle}>{criterion.title}</h4><span className={`${s.badge} ${criterion.supported ? '' : s.amber}`}>{criterion.supported ? '記録で確認' : '要確認'}</span></div><p className={s.small}>前回の目標：{criterion.expectation}</p><p className={s.body}>{criterion.reason}</p><SourceLinks recordIds={criterion.recordIds} /></article>)}
+            <details className={s.disclosure}><summary>前回からの変化</summary><div className={s.ratingCompare}><div><span className={s.small}>前回 · {evaluation.previous?.period}</span><strong>{evaluation.previous?.rating ?? '履歴なし'}</strong></div><span aria-hidden="true">→</span><div><span className={s.small}>今回の案</span><strong>{evaluation.rating}</strong></div></div><p className={s.small}>前回の目標と今回の確認済み記録を照合したデモです。</p></details>
+            <section role="region" aria-label="過去の評価"><details className={s.disclosure}><summary>過去の評価 · {pastReviews[employeeId].length}件</summary>{pastReviews[employeeId].map(review => <article key={review.id} className={s.pastReview}><div className={s.cardTop}><h4 className={s.cardTitle}>{review.period}</h4><span className={s.badge}>{review.rating}</span></div><p className={s.body}>{review.comment}</p><span className={s.small}>上長評価 · サンプル</span></article>)}</details></section>
+            <details className={s.disclosure}><summary>面談で確認すること · {employee.interviewPoints.length}件</summary><ul className={s.answerPoints}>{employee.interviewPoints.map(point => <li key={point.id}>{point.text}</li>)}</ul>{unchecked.length > 0 && <p className={s.small} style={{ marginTop: 14 }}>本人の投稿{unchecked.length}件は未確認。評価の確定には使用していません。</p>}</details>
+            <details className={s.disclosure}><summary>評価案を編集</summary><label className={s.label} htmlFor="evaluation-rating">評価区分</label><select id="evaluation-rating" className={s.input} value={edit.rating} onChange={event => updateEdit({ rating: event.target.value })}>{ratings.map(rating => <option key={rating}>{rating}</option>)}</select><label className={s.label} htmlFor="evaluation-comment">評価コメント</label><textarea id="evaluation-comment" className={s.input} rows={3} value={edit.comment} onChange={event => updateEdit({ comment: event.target.value })} /></details>
+            {error && <p className={s.error} role="alert">{error}</p>}
+            <div className={s.actionRow}><span className={s.small}>評価案を確認してから完了</span><button className={s.primary} disabled={done} onClick={confirm}>{done && <Check size={15} />}{done ? '確認済み' : '上長確認を完了'}</button></div>
+            <p className={s.status} role="status">{done ? '上長確認済み。このデモ内のみ保存。' : '評価案を自動表示しました。'}</p>
           </div>
-        </section>
-        {selected && <section className={s.panel} style={{ marginTop: 22 }}>
-          <div className={s.panelHead}><h2>回答の要点</h2><span className={s.badge}>説明案</span></div>
-          <div className={s.content}>
-            <div className={s.chatQuestion}>{selected.question}</div>
-            <ul className={s.answerPoints}>{selected.draft.split('。').filter(text => text.trim()).map((text, i) => <li key={i}>{text}。</li>)}</ul>
-            <Evidence records={employee.records.filter(r => selected.answer.recordIds.includes(r.id))} />
-            <div className={s.callout}><strong>要確認</strong><p style={{ margin: '6px 0 0' }}>{selected.answer.confirmation}</p></div>
-            <details className={s.disclosure}><summary>説明文を編集</summary><label className={s.label} htmlFor="explanation-draft">説明案</label><textarea id="explanation-draft" rows={5} className={s.input} value={selected.draft} disabled={added || busy} onChange={e => setExchanges(current => current.map(item => item.id === selectedId ? { ...item, draft: e.target.value } : item))} /></details>
-            <div className={s.actionRow}><span /><button className={s.secondary} disabled={added || busy} onClick={addNote}>{added ? <Check size={14} /> : <Plus size={14} />}{added ? 'メモに追加済み' : '面談メモに追加'}</button></div>
-          </div>
-        </section>}
-        <section className={s.panel} style={{ marginTop: 22 }} role="region" aria-label="面談メモ">
-          <details className={s.historyDisclosure} open={notes.length > 0}><summary>面談メモ <span>{notes.length}件</span></summary><div className={s.content}>
-            {notes.length > 0 && <ul className={s.notes}>{notes.map(note => <li key={note.id}><h3>{note.title}</h3><p className={s.body}>{note.body}</p></li>)}</ul>}
-            <label className={s.label} htmlFor="followup-question">面談で確認したい追加質問</label><textarea id="followup-question" className={s.input} rows={2} value={followup} onChange={e => setFollowup(e.target.value)} placeholder="面談で確かめたいこと…" />
-            <div className={s.actionRow}><span /><button className={s.secondary} onClick={addFollowup}><Plus size={14} />確認事項を残す</button></div>
-          </div></details>
         </section>
       </div>
-      <aside>
-        <details className={`${s.panel} ${s.historyDisclosure}`}><summary>今回の評価・コメント</summary><div className={s.content}><span className={s.badge}>上長が記入</span><h2 className={s.cardTitle} style={{ marginTop: 16 }}>期待を満たしている</h2><p className={s.body}>担当した制作を自律的に進め、チームのレビュー手順づくりにも取り組んだ。</p><h3 className={s.cardTitle} style={{ marginTop: 20 }}>上長のコメント</h3><p className={s.body}>{employee.managerComment}</p></div></details>
-        {exchanges.length > 0 && <details className={`${s.panel} ${s.historyDisclosure}`} style={{ marginTop: 20 }}><summary>質問の履歴 <span>{exchanges.length}件</span></summary>{exchanges.map(e => <button key={e.id} className={s.historyItem} aria-pressed={e.id === selectedId} disabled={busy} onClick={() => { setSelectedId(e.id); setError(''); }}><strong>{e.question}</strong></button>)}</details>}
-      </aside>
     </div>
   </>;
 }

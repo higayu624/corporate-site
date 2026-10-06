@@ -6,7 +6,7 @@ import s from '../mock.module.css';
 
 const links = [
   ['/assessment-mock/manager', '面談準備'],
-  ['/assessment-mock/explanation', '評価理由'],
+  ['/assessment-mock/explanation', '評価案・根拠'],
 ];
 export default function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();

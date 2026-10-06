@@ -1,52 +1,40 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ExplanationPage from '@/app/assessment-mock/explanation/page';
-import { answerQuestion } from '@/app/assessment-mock/explanation/answers';
-import { employees } from '@/app/assessment-mock/_data/demo';
 
 afterEach(cleanup);
-describe('評価理由の説明', () => {
-  it('既知テーマだけに回答し、存在する記録を根拠にする', () => {
-    expect(answerQuestion('前回から何が変わった？').theme).toBe('change');
-    expect(answerQuestion('次期に期待されることは？').theme).toBe('next');
-    const answer = answerQuestion('評価の根拠を教えて');
-    expect(answer.theme).toBe('evidence');
-    expect(answer.recordIds.length).toBeGreaterThan(0);
-    for (const id of answer.recordIds) expect(employees[0].records.some(r => r.id === id)).toBe(true);
-    const unknown = answerQuestion('賞与はいくら増えますか？');
-    expect(unknown.theme).toBe('unknown');
-    expect(unknown.recordIds).toEqual([]);
-    expect(unknown.confirmation).toContain('上長');
+describe('社員別の評価案', () => {
+  it('質問入力なしで評価案と本人の実績・過去の評価を表示する', async () => {
+    render(<ExplanationPage />);
+    expect(screen.getByRole('heading', { name: '評価案と根拠' })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: '今回の評価案' })).toHaveTextContent('期待を満たしている');
+    expect(screen.getAllByRole('link', { name: /Slack.*公開報告/ })[0]).toHaveAttribute('href', '/assessment-mock/sources/ms-1#slack');
+    expect(screen.getByRole('region', { name: '過去の評価' })).toHaveTextContent('2026年3月');
   });
-  it('質問例で根拠を示し、編集した説明を一度だけメモに残す', async () => {
+  it('社員切替で評価・根拠・過去履歴を本人のものに切り替える', async () => {
     const user = userEvent.setup(); render(<ExplanationPage />);
-    await user.click(screen.getByRole('button', { name: 'どの実績が評価の根拠になったか' }));
-    await screen.findByText('回答の要点');
-    expect(screen.getByLabelText('説明案').closest('details')).not.toHaveAttribute('open');
-    await user.click(screen.getByText('説明文を編集'));
-    const explanation = screen.getByLabelText('説明案');
-    expect((explanation as HTMLTextAreaElement).value).toContain('実装と全体進行は別の担当者');
-    await user.click(screen.getByText(/根拠の記録を確認/));
-    expect(screen.getByText(/6月18日に予定どおり公開/)).toBeInTheDocument();
-    await user.clear(explanation); await user.type(explanation, '本人の担当範囲を面談で確認する。');
-    await user.click(screen.getByRole('button', { name: '面談メモに追加' }));
-    expect(screen.getByRole('region', { name: '面談メモ' })).toHaveTextContent('本人の担当範囲を面談で確認する。');
-    expect(screen.getByRole('button', { name: 'メモに追加済み' })).toBeDisabled();
+    await user.click(screen.getByRole('button', { name: /田中 悠斗/ }));
+    expect(screen.getByRole('region', { name: '今回の評価案' })).toHaveTextContent('面談で確認が必要');
+    expect(screen.getAllByRole('link', { name: /メール.*受注API/ })[0]).toHaveAttribute('href', '/assessment-mock/sources/yt-2#email');
+    expect(screen.queryByRole('link', { name: /公開報告/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('region', { name: '過去の評価' })).toHaveTextContent('仕様確認');
+    await user.click(screen.getByRole('button', { name: /鈴木 遥/ }));
+    expect(screen.getAllByRole('link', { name: /スプレッドシート.*案件進行/ })[0]).toHaveAttribute('href', '/assessment-mock/sources/hs-1#sheet');
   });
-  it('空白質問を拒否し、範囲外質問は確認事項として残せる', async () => {
+  it('上長の編集と確認状態を社員別に保持し、空欄で確認できない', async () => {
     const user = userEvent.setup(); render(<ExplanationPage />);
-    await user.type(screen.getByLabelText('評価理由についての質問'), '   ');
-    await user.click(screen.getByRole('button', { name: '説明材料を作成' }));
-    expect(screen.getByRole('alert')).toHaveTextContent('質問');
-    await user.clear(screen.getByLabelText('評価理由についての質問'));
-    await user.type(screen.getByLabelText('評価理由についての質問'), '賞与はいくら増えますか？');
-    await user.click(screen.getByRole('button', { name: '説明材料を作成' }));
-    await screen.findByLabelText('説明案');
-    expect(screen.getByText('この質問を判断できる根拠は、サンプル記録にありません。上長に確認してください。')).toBeInTheDocument();
-    await user.click(screen.getByText(/面談メモ/, { selector: 'summary' }));
-    await user.type(screen.getByLabelText('面談で確認したい追加質問'), '成果の担当範囲を再確認したい');
-    await user.click(screen.getByRole('button', { name: '確認事項を残す' }));
-    expect(screen.getByRole('region', { name: '面談メモ' })).toHaveTextContent('成果の担当範囲を再確認したい');
+    await user.click(screen.getByText('評価案を編集'));
+    const comment = screen.getByLabelText('評価コメント');
+    await user.clear(comment); await user.click(screen.getByRole('button', { name: '上長確認を完了' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('評価コメント');
+    await user.type(comment, '担当業務の完了を確認した。');
+    await user.click(screen.getByRole('button', { name: '上長確認を完了' }));
+    expect(screen.getByRole('button', { name: '確認済み' })).toBeDisabled();
+    await user.click(screen.getByRole('button', { name: /田中 悠斗/ }));
+    expect(screen.getByRole('button', { name: '上長確認を完了' })).toBeEnabled();
+    await user.click(screen.getByRole('button', { name: /佐藤 美咲/ }));
+    expect(within(screen.getByRole('region', { name: '今回の評価案' })).getByText('担当業務の完了を確認した。')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '確認済み' })).toBeDisabled();
   });
 });
