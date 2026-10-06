@@ -12,8 +12,8 @@ export const employees: Employee[] = [
     records: [
       { id: 'ms-1', date: '2026.06.18', title: 'ブランドサイトの公開', body: 'ブランドサイトのデザイン制作とレビュー調整を担当。6月18日に予定どおり公開。実装は開発チームが担当し、全体の進行管理はプロジェクトリーダーが担当した。', source: 'プロジェクト完了報告 / 上長確認済み', verified: true },
       { id: 'ms-2', date: '2026.08.07', title: 'レビュー手順の共有', body: 'デザインレビュー用のチェックリストを作成。チームミーティングで共有し、2案件で使用された。手戻り件数への影響はまだ集計されていない。', source: 'チーム議事録 / 上長確認済み', verified: true },
-      { id: 'ms-3', date: '2026.09.11', title: '後輩へのサポート', body: '後輩のデザイン相談に週1回対応した。相談がしやすくなったと感じている。対応頻度と後輩の成長への影響は本人申告で、他者からの確認は未実施。', source: '本人の振り返り / 未確認', verified: false },
-      { id: 'ms-4', date: '2026.09.25', title: '進行中案件の課題', body: 'レビューが集中する週は制作時間が不足した。優先順位の調整を早めに相談することを次期の課題として挙げている。', source: '本人の振り返り / 未確認', verified: false },
+      { id: 'ms-3', date: '2026.09.11', title: '後輩へのサポート', body: '後輩のデザイン相談に週1回対応した。相談がしやすくなったと感じている。対応頻度と後輩の成長への影響は本人申告で、他者からの確認は未実施。', source: 'Slackの本人投稿 / 要確認', verified: false },
+      { id: 'ms-4', date: '2026.09.25', title: '進行中案件の課題', body: 'レビューが集中する週は制作時間が不足した。優先順位の調整を早めに相談することを次期の課題として挙げている。', source: 'Slackの本人投稿 / 要確認', verified: false },
     ],
     selfComment: '制作だけでなく、レビューの進め方にも関われた半年でした。一方で、後輩サポートと自分の制作時間の両立に難しさを感じています。',
     managerComment: '担当したデザイン制作を自律的に進め、公開まで完了した点を確認しています。チームへの貢献については、本人の役割と周囲への影響を面談で具体的に聞きたいです。',
@@ -34,7 +34,7 @@ export const employees: Employee[] = [
     records: [
       { id: 'yt-1', date: '2026.07.10', title: '問い合わせ対応の改善', body: '問い合わせ内容の分類とFAQの初版を作成し、チームで運用を開始。対応時間の削減幅は未計測。', source: '運用改善報告 / 上長確認済み', verified: true },
       { id: 'yt-2', date: '2026.08.21', title: 'API改修の完了', body: '受注APIの改修とテストを担当。レビューを経て本番反映。要件定義はリーダーが担当した。', source: 'リリース記録 / 上長確認済み', verified: true },
-      { id: 'yt-3', date: '2026.09.18', title: '仕様確認の振り返り', body: '仕様が曖昧なときに着手前の確認が不足した。次期は確認事項を書き出して共有したい。', source: '本人の振り返り / 未確認', verified: false },
+      { id: 'yt-3', date: '2026.09.18', title: '仕様確認の振り返り', body: '仕様が曖昧なときに着手前の確認が不足した。次期は確認事項を書き出して共有したい。', source: 'Slackの本人投稿 / 要確認', verified: false },
     ],
     selfComment: '実装に加えて、問い合わせ対応の仕組みづくりに取り組みました。要件の確認をもっと早くできたと感じています。',
     managerComment: 'API改修の完了を確認しています。FAQの効果はまだ測定できていないため、件数と利用状況を次期に確認したいです。',
@@ -69,3 +69,24 @@ export const employees: Employee[] = [
     ],
   },
 ];
+
+export type SourceKind = 'slack' | 'sheet' | 'email';
+export type SourceReference = { kind: SourceKind; label: string; excerpt: string };
+export const sourceLabels: Record<SourceKind, string> = { slack: 'Slack', sheet: 'スプレッドシート', email: 'メール' };
+export const recordSources: Record<string, SourceReference[]> = {
+  'ms-1': [
+    { kind: 'slack', label: '#brand-site · 公開報告', excerpt: '佐藤：デザイン制作とレビュー調整が完了しました。実装は開発チーム、全体進行はリーダーが担当です。' },
+    { kind: 'email', label: '公開完了のご連絡', excerpt: '6月18日にサイトを公開しました。デザイン担当：佐藤美咲。' },
+  ],
+  'ms-2': [{ kind: 'sheet', label: 'デザインレビュー・チェックリスト', excerpt: '作成者：佐藤美咲。利用案件：2件。手戻り削減効果：未集計。' }],
+  'ms-3': [{ kind: 'slack', label: '#design · 後輩サポート', excerpt: '佐藤：後輩のデザイン相談に週1回対応しています。相談しやすくなったと感じます。※本人の投稿。頻度・効果は未確認。' }],
+  'ms-4': [{ kind: 'slack', label: '#design · 制作時間の相談', excerpt: '佐藤：レビューが集中する週は制作時間が足りません。優先順位を早めに相談したいです。' }],
+  'yt-1': [
+    { kind: 'slack', label: '#support · FAQ運用開始', excerpt: '田中：FAQの初版を作成し、チームで運用を開始しました。削減時間はまだ測定していません。' },
+    { kind: 'sheet', label: '問い合わせ分類・FAQ管理表', excerpt: '分類・FAQ初版担当：田中悠斗。運用開始日：7月10日。対応時間：未計測。' },
+  ],
+  'yt-2': [{ kind: 'email', label: '受注API 本番反映報告', excerpt: '実装・テスト担当：田中悠斗。レビュー後に本番反映済み。要件定義担当：リーダー。' }],
+  'yt-3': [{ kind: 'slack', label: '#development · 仕様確認の相談', excerpt: '田中：着手前の仕様確認が不足した場面がありました。確認事項を書き出して共有したいです。' }],
+  'hs-1': [{ kind: 'sheet', label: '案件進行・納品管理表', excerpt: '進行担当：鈴木遥。2案件を合意した納期で納品。制作・実装：各担当者。' }],
+  'hs-2': [{ kind: 'email', label: '追加要望と対応範囲の合意', excerpt: '鈴木より追加要望を整理し、顧客と対応範囲を合意。チームへの共有時期は改善事項。' }],
+};

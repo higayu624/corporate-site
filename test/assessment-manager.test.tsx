@@ -14,21 +14,22 @@ describe('上長の面談準備', () => {
     await user.click(screen.getByRole('button', { name: /田中 悠斗/ }));
     expect(screen.getByRole('heading', { name: '田中 悠斗' })).toBeInTheDocument();
     expect(screen.getByLabelText('蓄積された記録数')).toHaveTextContent('3');
-    await user.click(screen.getByRole('button', { name: '面談資料を整理' }));
+    await user.click(screen.getByRole('button', { name: 'データを収集・整理' }));
     expect(await screen.findByRole('tab', { name: '実績・行動' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '問い合わせ対応の改善' })).toBeInTheDocument();
     expect(screen.queryByText('ブランドサイトの公開')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: /Slack/ })[0]).toHaveAttribute('href', '/assessment-mock/sources/yt-1#slack');
   });
   it('元の記録を確認し、視点・比較・面談項目を切り替えられる', async () => {
     const user = userEvent.setup();
     render(<ManagerPage />);
-    await user.click(screen.getByRole('button', { name: '面談資料を整理' }));
+    await user.click(screen.getByRole('button', { name: 'データを収集・整理' }));
     await screen.findByRole('tab', { name: '実績・行動' });
     const evidence = screen.getAllByText(/根拠の記録を確認/)[0];
     await user.click(evidence);
     expect(screen.getByText(/ブランドサイトのデザイン制作とレビュー調整を担当。6月18日/)).toBeInTheDocument();
-    await user.click(screen.getByRole('tab', { name: '本人と上長の視点' }));
-    expect(screen.getByRole('heading', { name: '本人の振り返り' })).toBeInTheDocument();
+    await user.click(screen.getByRole('tab', { name: '収集した記録' }));
+    expect(screen.getByRole('heading', { name: 'ブランドサイトの公開' })).toBeInTheDocument();
     await user.click(screen.getByRole('tab', { name: '前回との比較' }));
     expect(screen.getByText(/担当領域の自立を次期の目標/)).toBeInTheDocument();
     await user.click(screen.getByRole('tab', { name: '面談ポイント' }));
@@ -39,7 +40,7 @@ describe('上長の面談準備', () => {
   it('社員切替で別社員のチェック状態を持ち越さない', async () => {
     const user = userEvent.setup();
     render(<ManagerPage />);
-    await user.click(screen.getByRole('button', { name: '面談資料を整理' }));
+    await user.click(screen.getByRole('button', { name: 'データを収集・整理' }));
     await screen.findByRole('tab', { name: '面談ポイント' });
     await user.click(screen.getByRole('tab', { name: '面談ポイント' }));
     await user.click(screen.getAllByRole('checkbox')[0]);
@@ -50,11 +51,11 @@ describe('上長の面談準備', () => {
   it('矢印キーで資料のタブを切り替えられる', async () => {
     const user = userEvent.setup();
     render(<ManagerPage />);
-    await user.click(screen.getByRole('button', { name: '面談資料を整理' }));
+    await user.click(screen.getByRole('button', { name: 'データを収集・整理' }));
     const first = await screen.findByRole('tab', { name: '実績・行動' });
     await user.click(first);
     await user.keyboard('{ArrowRight}');
-    expect(screen.getByRole('tab', { name: '本人と上長の視点' })).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getByRole('tab', { name: '本人と上長の視点' })).toHaveFocus();
+    expect(screen.getByRole('tab', { name: '収集した記録' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: '収集した記録' })).toHaveFocus();
   });
 });
