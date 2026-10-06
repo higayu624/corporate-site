@@ -206,3 +206,6 @@
 .pastReview { padding:16px 0; border-bottom:1px solid var(--line); }
 .pastReview:last-child { border:0; }
 @media(max-width:760px) { .evaluationSummary { padding:18px; } .evaluationSummary h2 { font-size:21px; } .ratingCompare { flex-wrap:wrap; } .pastReview .cardTop { flex-wrap:wrap; } }
+.twoStats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.memoSection { border-top:1px solid var(--line); padding:24px 28px; }
+@media(max-width:760px) { .memoSection { padding:22px 20px; } }
