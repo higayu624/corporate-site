@@ -30,6 +30,22 @@ export function buildEvaluation(employee: Employee, cases: EvaluationCase[] = ev
     return { title: achievement.title, recordIds: records.map(record => record.id), supported, reason: achievement.detail };
   });
   const rating = reference?.rating ?? '面談で確認が必要';
-  const comment = reference ? `事例${reference.id}と共通する実績を確認。近い事例の評価区分を参考にした案です。` : '比較できる事例または確認済み記録が不足しています。';
+  const comment = reference ? `事例${reference.id}を参考。` : '比較できる事例または確認済み記録が不足しています。';
   return { criteria, comparableCases, reference, rating, comment };
 }
+
+export type PersonalReview = { period: string; rating: string; comment: string };
+export const personalReviews: Record<string, PersonalReview[]> = {
+  misaki: [
+    { period: '2026年3月', rating: '一部に支援が必要', comment: '担当領域の自立とレビュー調整を期待。' },
+    { period: '2025年9月', rating: '一部に支援が必要', comment: '制作は安定。レビュー調整には上長の支援が必要。' },
+  ],
+  yuto: [
+    { period: '2026年3月', rating: '一部に支援が必要', comment: '着手前の仕様確認と実装品質の維持を期待。' },
+    { period: '2025年9月', rating: '一部に支援が必要', comment: '実装の品質は安定。仕様確認には支援が必要。' },
+  ],
+  haruka: [
+    { period: '2026年3月', rating: '期待を満たしている', comment: '複数案件の進行と情報共有の改善を期待。' },
+    { period: '2025年9月', rating: '期待を満たしている', comment: '案件の進行と顧客調整を安定して担当。' },
+  ],
+};

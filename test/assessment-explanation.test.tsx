@@ -28,6 +28,18 @@ describe('社員別の評価案', () => {
     await user.click(screen.getByRole('button', { name: /鈴木 遥/ }));
     expect(screen.getAllByRole('link', { name: /スプレッドシート.*案件進行/ })[0]).toHaveAttribute('href', '/assessment-mock/sources/hs-1#sheet');
   });
+  it('説明は閉じて表示し、本人の過去評価は社員別に確認できる', async () => {
+    const user = userEvent.setup(); render(<ExplanationPage />);
+    const history = screen.getByRole('region', { name: '本人の過去評価' });
+    expect(history).toHaveTextContent('2026年3月');
+    expect(within(history).getByText('担当領域の自立とレビュー調整を期待。').closest('details')).not.toHaveAttribute('open');
+    await user.click(within(history).getAllByText('コメント')[0]);
+    expect(within(history).getByText('担当領域の自立とレビュー調整を期待。').closest('details')).toHaveAttribute('open');
+    expect(screen.getAllByText('実績の説明')[0].closest('details')).not.toHaveAttribute('open');
+    await user.click(screen.getByRole('button', { name: /田中 悠斗/ }));
+    expect(screen.getByRole('region', { name: '本人の過去評価' })).toHaveTextContent('着手前の仕様確認');
+    expect(screen.getByRole('region', { name: '本人の過去評価' })).not.toHaveTextContent('担当領域の自立');
+  });
   it('上長の編集と確認状態を社員別に保持し、空欄で確認できない', async () => {
     const user = userEvent.setup(); render(<ExplanationPage />);
     await user.click(screen.getByText('評価案を編集'));
